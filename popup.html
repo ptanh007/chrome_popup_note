@@ -1,0 +1,54 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+      }
+      #status {
+        /* avoid an excessively wide status text */
+        white-space: pre;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 400px;
+      }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+	  	
+    -->
+	
+
+  </head>
+  
+  <body>
+	<h1>History</h1>
+		<textarea id="note_0" disabled></textarea></br>
+		<textarea id="note_1" disabled></textarea></br>
+	<h2>Note</h2>
+		<p>
+			Time: <output id="time_note"></output></br>
+			Level: <output id="level"></output></br>
+			New note: <textarea  id="note_input" name='inpute note'></textarea >
+			<button id="button">SAVE</button>
+			<button id="incr_lvl">+level</button>
+			<button id="decre_lvl">-level</button>
+			<button id="close_win">close</button>
+			<button id="stop_background">stop</button>
+		</p>
+	<script src="popup.js"></script>
+	
+  </body>
+  </body>
+</html>
