@@ -63,7 +63,7 @@ function closeWin() {
   window.close();   // Closes the new window
 };
 function stop_background() {
-	clearTimeout();
+	chrome.runtime.sendMessage({type: 'stop timer run'});
 };
 
 display();

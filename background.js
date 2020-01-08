@@ -6,4 +6,11 @@ function openwindow() {
 	window.open("popup.html", "extension_popup", "width=300,height=400,status=no");	
 };
 //timer call windown every timer out
-setTimeout(openwindow,timer);
+document.addEventListener('DOMContentLoaded', openwindow);
+var interval_timout = setInterval(openwindow,timer);
+
+chrome.runtime.onMessage.addListener(function(message, sender, reply) {
+  if (message.type == 'stop timer run') {
+	  clearInterval(interval_timout);
+  }
+});
