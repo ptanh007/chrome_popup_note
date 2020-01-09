@@ -1,9 +1,3 @@
-/**
- * Prints the title of the sample document:
- * https://docs.google.com/document/d/139SHY8E3DshWglE0S8ZWQGa3I8p-e5Id39ozHyHhItk/edit
- */
-
-
 function update_display(history_data){
 	var history_text = '';
 	for (var i = history_data.length-3; i < history_data.length; i++) {
@@ -11,7 +5,8 @@ function update_display(history_data){
 		if(i>=0){
 			history_text = history_text.concat(create_text(history_data[i]));
 		};
-	};		
+	};	
+
 	// get previous notes
 	document.getElementById("history_note").value = history_text;
 	// update time display
@@ -19,7 +14,6 @@ function update_display(history_data){
 	var hours = new_data.getHours().toString();
 	var minutes = new_data.getMinutes().toString();
 	var time = hours.concat(":", minutes) ;
-	var data_len = history_data.length;
 	document.getElementById("time_note").value = time;
 	//reset input note
 	document.getElementById("note_input").value = "";
@@ -37,7 +31,7 @@ function create_text(data) {
 	text_data = text_data.concat(value, '\n');
 	text_data = whiteSpace + text_data.split('\n').join(whiteSpace + '\n') ;
 	return text_data;
-}
+};
 function get_obj_value(obj, key){
 	if(typeof(obj)==='object' && key in obj){
 		return obj[key]
@@ -46,11 +40,14 @@ function get_obj_value(obj, key){
 	};
 };
 
-
 function get_storage() {
 	return new Promise(function(resolve, reject) {
 		chrome.storage.local.get(['history_data'], function(result) {
-			resolve(result.history_data);
+			if('history_data' in result){
+				resolve(result.history_data);
+			} else {
+				resolve([]);
+			};
 		});
 	});
 };
