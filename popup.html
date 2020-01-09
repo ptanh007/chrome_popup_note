@@ -34,20 +34,20 @@
   
   <body>
 	<h1>History</h1>
-		<textarea id="note_0" disabled></textarea></br>
-		<textarea id="note_1" disabled></textarea></br>
+		<textarea id="history_note" rows="5" cols="30" disabled></textarea></br>
 	<h2>Note</h2>
 		<p>
 			Time: <output id="time_note"></output></br>
 			New note: <textarea  id="note_input" name='inpute note'></textarea >
-			<button id="button">SAVE</button>
+			<button id="update">UPDATE</button>
 			<button id="close_win">close</button>
 			<button id="stop_background">stop</button>
 			<button id="export_csv">export csv</button>
+			<button id="export_text">export text</button>
 			<select id="level">
-				<option value="0">level_0</option>
-				<option value="1">level_1</option>
-				<option value="2">level_2</option>
+				<option value=0>level_0</option>
+				<option value=1>level_1</option>
+				<option value=2>level_2</option>
 			</select>
 		</p>
 	<script src="popup.js"></script>

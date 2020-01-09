@@ -4,92 +4,132 @@
  */
 
 
-var new_date = new Date();
-var hours = new_date.getHours().toString();
-var minutes = new_date.getMinutes().toString();
-var time = hours.concat(":", minutes) ;
-const pref_csv = "file.csv";
-
-var max_lvl = 2;
-var min_lvl = 0;
-var history_data = [];
-
-
-function display(){
-	chrome.storage.sync.get(['note_0','note_1'], function(result) {
-		// get previous notes
-		note_0 = result.note_0
-		note_1 = result.note_1;
-		document.getElementById("note_0").value = note_0;
-		document.getElementById("note_1").value = note_1;
-		document.getElementById("time_note").value = time;
-
-	});
-};
-
-function update_display() {
-	// update note0 = note1
-	note_0 = document.getElementById("note_1").value;
-	//update note1 = inpurt_note
-	var new_note = '';
-	var level_e = document.getElementById('level');
-	var level = level_e.options[level_e.selectedIndex].value;
-	
-	var input_note = document.getElementById("note_input").value;
-	for (var i = 0; i <= level; i++) {
-		new_note = new_note.concat('  ');
-	};
-	note_1 = new_note.concat(time, ' ', input_note);
+function update_display(history_data){
+	var history_text = '';
+	for (var i = history_data.length-3; i < history_data.length; i++) {
+		var display_text = ''
+		if(i>=0){
+			history_text = history_text.concat(create_text(history_data[i]));
+		};
+	};		
+	// get previous notes
+	document.getElementById("history_note").value = history_text;
+	// update time display
+	var new_data = new Date();
+	var hours = new_data.getHours().toString();
+	var minutes = new_data.getMinutes().toString();
+	var time = hours.concat(":", minutes) ;
+	var data_len = history_data.length;
+	document.getElementById("time_note").value = time;
 	//reset input note
 	document.getElementById("note_input").value = "";
+};
+function create_text(data) {
+	var text_data = '';
+	var whiteSpace = '';
+	var level = get_obj_value(data, 'level') || 0;
+	var obj_time = get_obj_value(data, 'time') || 'NA';
+	var value = get_obj_value(data, 'value') || '';
+	for(var j= 0; j < level; j++) {
+		whiteSpace = whiteSpace.concat('   ');
+	};
+	text_data = text_data.concat(obj_time,':');
+	text_data = text_data.concat(value, '\n');
+	text_data = whiteSpace + text_data.split('\n').join(whiteSpace + '\n') ;
+	return text_data;
+}
+function get_obj_value(obj, key){
+	if(typeof(obj)==='object' && key in obj){
+		return obj[key]
+	} else {
+		return false
+	};
+};
+
+
+function get_storage() {
+	return new Promise(function(resolve, reject) {
+		chrome.storage.local.get(['history_data'], function(result) {
+			resolve(result.history_data);
+		});
+	});
+};
+function update(data, display_only=false){
+	get_storage().then(function(value) {
+		if(!display_only) {
+			value.push(data);
+		};
+		update_display(value);
+		chrome.storage.local.set({'history_data': value});
+    });
+};
+
+function get_new_data() {
+	//get new note value
+	var level_e = document.getElementById('level');
+	var level = parseInt(level_e.options[level_e.selectedIndex].value);
+	var input_note = document.getElementById("note_input").value;
+	var time = document.getElementById("time_note").value;
 	//storage note to local memory
-	chrome.storage.sync.set({'note_1': note_1}, function() {
-          console.log('Value is set to ' + note_1);
-	});
-	chrome.storage.sync.set({'note_0': note_0}, function() {
-          console.log('Value is set to ' + note_0);
-	});
-	history_data.push([time, level, input_note]);
-	display();	
+	var new_data = {'level':level,'value':input_note, 'time':time};
+	return new_data;
 };
 function closeWin() {
   window.close();   // Closes the new window
+  return null;
 };
 function stop_background() {
 	chrome.runtime.sendMessage({type: 'stop timer run'});
 };
-function export_data(data_tbl, csv_file) {
-	//Open previous file
-	var rawFile = new XMLHttpRequest();
-	var csv_data = ''
-	rawFile.open("GET", csv_file, true);
-	rawFile.onreadystatechange = function() {
-		if (rawFile.readyState === 4) {
-			csv_data = rawFile.responseText;
-		};
-	};
-	rawFile.send();
-	//create csv data
-	for(var line of data_tbl){
-		csv_data = csv_data.concat(line.join(";"), "\n");
-	};
-	//creative new log file
-	var link = document.createElement("a");
-	var data_type = "data:text/csv"
-	link.textContent = "Save as CSV";
-	link.download = "file.csv";
 
-	link.href = data_type.concat(",", csv_data);
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
+function export_csv() {
+	get_storage().then(function(data_tbl) {
+		var csv_data = '';
+		//create csv data
+		for(var line of data_tbl){
+			csv_data = csv_data.concat(line['time'],';');
+			csv_data = csv_data.concat(line['level'],';');
+			csv_data = csv_data.concat(line['value'],';', '\n');
+		};
+		//creative new log file
+		var link = document.createElement("a");
+		var data_type = "data:text/csv"
+		link.textContent = "Save as CSV";
+		link.download = "file.csv";
+
+		link.href = data_type.concat(",", csv_data);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	});
 };
 
-display();
+function export_text() {
+	get_storage().then(function(data_tbl) {
+		var text_data = '';
+		//create csv data
+		for(var line of data_tbl){
+			text_data = text_data.concat(create_text(line));
+		};
+		//creative new log file
+		var link = document.createElement("a");
+		var data_type = "data:text"
+		link.textContent = "Save as TEXT";
+		link.download = "file.txt";
 
+		link.href = data_type.concat(",", text_data);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	});
+};
+
+update([], true);
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('button').addEventListener('click', update_display)
+    document.getElementById('update').addEventListener('click', function () {
+		update(get_new_data());
+	});
 });
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('close_win').addEventListener('click', closeWin)
@@ -98,7 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('stop_background').addEventListener('click', stop_background)
 });
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('export_csv').addEventListener('click', function(){
-		export_data(history_data, pref_csv);
-	});
+    document.getElementById('export_csv').addEventListener('click', export_csv)
+});
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('export_text').addEventListener('click', export_text)
 });
