@@ -1,18 +1,18 @@
 function update_display(history_data){
 	var history_text = '';
-	for (var i = history_data.length-3; i < history_data.length; i++) {
+	for (var i = 0; i<history_data.length; i++) {
 		var display_text = ''
 		if(i>=0){
 			history_text = history_text.concat(create_text(history_data[i]));
 		};
 	};	
-
 	// get previous notes
 	document.getElementById("history_note").value = history_text;
 	// update time display
-	var new_data = new Date();
-	var hours = new_data.getHours().toString();
-	var minutes = new_data.getMinutes().toString();
+	var new_date = new Date();
+	var hours = new_date.getHours().toString();
+	var minutes = new_date.getMinutes().toString();
+
 	var time = hours.concat(":", minutes) ;
 	document.getElementById("time_note").value = time;
 	//reset input note
@@ -56,27 +56,24 @@ function update(data, display_only=false){
 		if(!display_only) {
 			value.push(data);
 		};
-		update_display(value);
+		update_display(value);		
 		chrome.storage.local.set({'history_data': value});
     });
 };
 
-function get_new_data() {
+function get_new_date() {
 	//get new note value
 	var level_e = document.getElementById('level');
 	var level = parseInt(level_e.options[level_e.selectedIndex].value);
 	var input_note = document.getElementById("note_input").value;
 	var time = document.getElementById("time_note").value;
 	//storage note to local memory
-	var new_data = {'level':level,'value':input_note, 'time':time};
-	return new_data;
+	var new_date = {'level':level,'value':input_note, 'time':time};
+	return new_date;
 };
 function closeWin() {
   window.close();   // Closes the new window
   return null;
-};
-function stop_background() {
-	chrome.runtime.sendMessage({type: 'stop timer run'});
 };
 
 function export_csv() {
@@ -92,7 +89,7 @@ function export_csv() {
 		var link = document.createElement("a");
 		var data_type = "data:text/csv"
 		link.textContent = "Save as CSV";
-		link.download = "file.csv";
+		link.download = 'file.csv';
 
 		link.href = data_type.concat(",", csv_data);
 		document.body.appendChild(link);
@@ -112,7 +109,7 @@ function export_text() {
 		var link = document.createElement("a");
 		var data_type = "data:text"
 		link.textContent = "Save as TEXT";
-		link.download = "file.txt";
+		link.download = 'file.txt';
 
 		link.href = data_type.concat(",", text_data);
 		document.body.appendChild(link);
@@ -120,23 +117,49 @@ function export_text() {
 		document.body.removeChild(link);
 	});
 };
+function update_timer() {
+	var time_value = parseInt(document.getElementById("timer").value);
+	chrome.runtime.sendMessage({type: 'update timer run', value: time_value});
+};
 
-update([], true);
+
+update(get_new_date(), true);	
+update_timer();
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('update').addEventListener('click', function () {
-		update(get_new_data());
+	document.getElementById('export_csv').addEventListener('click', export_csv);
+	document.getElementById('export_text').addEventListener('click', export_text);
+	document.getElementById("note_input").addEventListener("keypress",function() {
+		//when input 'enter'
+		if(event.keyCode == 13 && event.shiftKey){
+			update(get_new_date());
+			setTimeout(closeWin, 500);
+		};
+	});
+	document.getElementById("timer").addEventListener("keypress",function() {
+		// Handle key press
+		var key = event.keyCode;
+		key = String.fromCharCode(key);
+		var regex = /[0-9]/;
+		if( !regex.test(key) ) {
+		event.returnValue = false;
+		if(event.preventDefault) event.preventDefault();
+		};
+	});
+	var typingTimer;
+	document.getElementById("timer").addEventListener("keyup",function() {
+		// Handle key press
+		var key = event.keyCode;
+		key = String.fromCharCode(key);
+		var regex = /[0-9]/;
+		if( !regex.test(key) ) {
+		event.returnValue = false;
+		if(event.preventDefault) event.preventDefault();
+		};
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(update_timer, 2000);
 	});
 });
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('close_win').addEventListener('click', closeWin)
-});
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('stop_background').addEventListener('click', stop_background)
-});
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('export_csv').addEventListener('click', export_csv)
-});
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('export_text').addEventListener('click', export_text)
-});
+
+
+
