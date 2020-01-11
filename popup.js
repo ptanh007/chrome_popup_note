@@ -12,9 +12,11 @@ function update_display(history_data){
 	var new_date = new Date();
 	var hours = new_date.getHours().toString();
 	var minutes = new_date.getMinutes().toString();
-
-	var time = hours.concat(":", minutes) ;
-	document.getElementById("time_note").value = time;
+	var dates = new_date.getDate().toString();
+	var months = new_date.getDate().toString();
+	var years =  new_date.getYear().toString();
+	document.getElementById("date").value = dates.concat('_', months, '_', years);
+	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
 	document.getElementById("note_input").value = "";
 };
@@ -67,8 +69,9 @@ function get_new_date() {
 	var level = parseInt(level_e.options[level_e.selectedIndex].value);
 	var input_note = document.getElementById("note_input").value;
 	var time = document.getElementById("time_note").value;
+	var date = document.getElementById("date").value;
 	//storage note to local memory
-	var new_date = {'level':level,'value':input_note, 'time':time};
+	var new_date = {'level':level,'value':input_note, 'time':time, 'date': date};
 	return new_date;
 };
 function closeWin() {
@@ -78,48 +81,85 @@ function closeWin() {
 
 function export_csv() {
 	get_storage().then(function(data_tbl) {
-		var csv_data = '';
+		var csv_data = 'data:text/csv,';
+		var cur_date = '';
+		var create_file = false;
+		var file_name = '';
 		//create csv data
-		for(var line of data_tbl){
-			csv_data = csv_data.concat(line['time'],';');
-			csv_data = csv_data.concat(line['level'],';');
-			csv_data = csv_data.concat(line['value'],';', '\n');
+		while(data_tbl.length > 0){
+			if(cur_date===data_tbl[0]['date']){
+				line = data_tbl.shift();
+				csv_data = csv_data.concat(line['time'],';');
+				csv_data = csv_data.concat(line['level'],';');
+				csv_data = csv_data.concat(line['value'],';', '\n');
+				if(data_tbl.length===0) {
+					create_file = true;
+					file_name = cur_date.concat('.csv');
+				};
+			} else {
+				if (cur_date!==''){
+					create_file = true;
+					file_name = cur_date.concat('.csv');										
+				};
+				cur_date = data_tbl[0]['date'];;
+			};
+			
+			if (create_file){
+				//creative new log file
+				export_file(csv_data, file_name);
+				csv_data = 'data:text/csv,';
+				create_file = false;			
+			};
 		};
-		//creative new log file
-		var link = document.createElement("a");
-		var data_type = "data:text/csv"
-		link.textContent = "Save as CSV";
-		link.download = 'file.csv';
-
-		link.href = data_type.concat(",", csv_data);
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
 	});
 };
 
 function export_text() {
 	get_storage().then(function(data_tbl) {
-		var text_data = '';
-		//create csv data
-		for(var line of data_tbl){
-			text_data = text_data.concat(create_text(line));
-		};
+		var text_data = 'data:text,';
+		var cur_date = '';
+		var create_file = false;
+		var file_name = '';
 		//creative new log file
-		var link = document.createElement("a");
-		var data_type = "data:text"
-		link.textContent = "Save as TEXT";
-		link.download = 'file.txt';
-
-		link.href = data_type.concat(",", text_data);
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		while(data_tbl.length > 0){
+			if(cur_date===data_tbl[0]['date']){
+				line = data_tbl.shift();
+				text_data = text_data.concat(create_text(line));
+				if(data_tbl.length===0) {
+					create_file = true;
+					file_name = cur_date.concat('.txt');
+				};
+			} else {
+				if (cur_date!==''){
+					create_file = true;
+					file_name = cur_date.concat('.csv');										
+				};
+				cur_date = data_tbl[0]['date'];;
+			};
+			if (create_file){
+				//creative new log file
+				export_file(text_data, file_name);
+				text_data = 'data:text,';
+				create_file = false;			
+			};
+		};
 	});
+};
+
+function export_file(data,file_name) {
+	var link = document.createElement("a");
+	link.textContent = "Save as TEXT";
+	link.download = file_name;
+	link.href = data;
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
 };
 function update_timer() {
 	var time_value = parseInt(document.getElementById("timer").value);
 	chrome.runtime.sendMessage({type: 'update timer run', value: time_value});
+};
+function init_timer() {
 };
 
 
