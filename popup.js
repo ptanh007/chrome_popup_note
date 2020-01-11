@@ -12,13 +12,11 @@ function update_display(history_data){
 	var new_date = new Date();
 	var hours = new_date.getHours().toString();
 	var minutes = new_date.getMinutes().toString();
-	var dates = new_date.getDate().toString();
-	var months = new_date.getDate().toString();
-	var years =  new_date.getYear().toString();
-	document.getElementById("date").value = dates.concat('_', months, '_', years);
+	document.getElementById("date").value = new_date.toISOString().substr(0, 19).replace(/T.*/, ' ');
 	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
 	document.getElementById("note_input").value = "";
+
 };
 function create_text(data) {
 	var text_data = '';
@@ -132,11 +130,12 @@ function export_text() {
 			} else {
 				if (cur_date!==''){
 					create_file = true;
-					file_name = cur_date.concat('.csv');										
+					file_name = cur_date.concat('.txt');										
 				};
-				cur_date = data_tbl[0]['date'];;
+				cur_date = data_tbl[0]['date'];
 			};
 			if (create_file){
+				alert(file_name);
 				//creative new log file
 				export_file(text_data, file_name);
 				text_data = 'data:text,';
