@@ -1,9 +1,36 @@
 //
-var cur_timer = 0;
+var cur_timer = 5;
+var global_timeout;
+var run_status = true;
 
 //open window function
 function openwindow() {
-	window.open("popup.html", "extension_popup", "width=300,height=450,status=no");	
+	var current_win = window.open("popup.html", "extension_popup", "width=300,height=450,status=no");	
+	current_win.onload = function() {
+		current_win.document.getElementById("timer").value = cur_timer;
+		var typingTimer;
+		current_win.document.getElementById("timer").addEventListener("keyup",function() {
+			// Handle key press
+			var key = event.keyCode;
+			key = String.fromCharCode(key);
+			var regex = /[0-9]/;
+			if( !regex.test(key) ) {
+			event.returnValue = false;
+			if(event.preventDefault) event.preventDefault();
+			};
+			clearTimeout(typingTimer);
+			typingTimer = setTimeout(
+				function() {
+					clearInterval(global_timeout);
+					var new_timer = parseInt(current_win.document.getElementById("timer").value);
+					if(new_timer>=0){
+						cur_timer = new_timer;
+					};
+					current_win.document.getElementById("timer").value = cur_timer;
+					global_timeout = set_timer(cur_timer);
+				}, 2000);
+		});
+	};
 };
 //timer call windown every timer out
 
@@ -15,38 +42,26 @@ function change_icon(app_status) {
 
 function set_timer(timer){
 	var interval_timout;
-	if(timer){
-		cur_timer = timer;
-	} else {
-		timer = cur_timer;
-	};
-	interval_timout = setInterval(openwindow,timer);
+	interval_timout = setInterval(openwindow, timer* 60* 1000);
+	run_status = true;
+	change_icon('run');	
 	return interval_timout;
 };
 
 document.addEventListener('DOMContentLoaded', function () {
 	openwindow();
-	var interval_timout;
-	var run_status = true;
+	global_timeout = set_timer(cur_timer);
 	chrome.browserAction.onClicked.addListener(function () {
 		if(run_status){
-			clearInterval(interval_timout);
+			clearInterval(global_timeout);
 			change_icon('stop');
 			run_status = false;
 		} else {
-			interval_timout = set_timer();
+			clearInterval(global_timeout);
+			global_timeout = set_timer(cur_timer);
 			change_icon('run');			
+			openwindow();
 		};
-	});
-	chrome.runtime.onMessage.addListener(function(message, sender, reply) {
-		if (message.type == 'update timer run') {
-		  clearInterval(interval_timout);
-		  //timer on millisecond 
-		  run_status = true;
-		  change_icon('run');
-		  timer = message.value * 60* 1000;
-		  interval_timout = set_timer(timer);
-		}
 	});
 });
 

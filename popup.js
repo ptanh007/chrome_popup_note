@@ -155,16 +155,8 @@ function export_file(data,file_name) {
 	link.click();
 	document.body.removeChild(link);
 };
-function update_timer() {
-	var time_value = parseInt(document.getElementById("timer").value);
-	chrome.runtime.sendMessage({type: 'update timer run', value: time_value});
-};
-function init_timer() {
-};
-
 
 update(get_new_date(), true);	
-update_timer();
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
@@ -185,19 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		event.returnValue = false;
 		if(event.preventDefault) event.preventDefault();
 		};
-	});
-	var typingTimer;
-	document.getElementById("timer").addEventListener("keyup",function() {
-		// Handle key press
-		var key = event.keyCode;
-		key = String.fromCharCode(key);
-		var regex = /[0-9]/;
-		if( !regex.test(key) ) {
-		event.returnValue = false;
-		if(event.preventDefault) event.preventDefault();
-		};
-		clearTimeout(typingTimer);
-		typingTimer = setTimeout(update_timer, 2000);
 	});
 });
 
