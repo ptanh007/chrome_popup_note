@@ -1,3 +1,5 @@
+var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Apps Script script id
+
 function update_display(history_data){
 	var history_text = '';
 	for (var i = 0; i<history_data.length; i++) {
@@ -155,16 +157,138 @@ function export_file(data,file_name) {
 	document.body.removeChild(link);
 };
 
-update(get_new_date(), true);	
+function write_tempo() {
+    //console.log("Write tempo");
+	sendDataToExecutionAPI();
+};
+
+/**
+ * Make an authenticated HTTP POST request.
+ *
+ * @param {object} options
+ *   @value {string} url - URL to make the request to. Must be whitelisted in manifest.json
+ *   @value {object} request - Execution API request object
+ *   @value {string} token - Google access_token to authenticate request with.
+ *   @value {function} callback - Function to receive response.
+ */
+function post(options) {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			// JSON response assumed. Other APIs may have different responses.
+			options.callback(JSON.parse(xhr.responseText));
+		} else if(xhr.readyState === 4 && xhr.status !== 200) {
+			//sampleSupport.log('post', xhr.readyState, xhr.status, xhr.responseText);
+		}
+	};
+	xhr.open('POST', options.url, true);
+	// Set standard Google APIs authentication header.
+	xhr.setRequestHeader('Authorization', 'Bearer ' + options.token);
+	xhr.send(JSON.stringify(options.request));
+}
+
+/**
+ * Calling the Execution API script.
+ */
+function sendDataToExecutionAPI() {
+	//disableButton(xhr_button);
+	//xhr_button.className = 'loading';
+	getAuthToken({
+		'interactive': true,
+		'callback': sendDataToExecutionAPICallback,
+	});
+}
+
+/**
+ * Calling the Execution API script callback.
+ * @param {string} token - Google access_token to authenticate request with.
+ */
+function sendDataToExecutionAPICallback(token) {
+	get_storage().then(function(data_tbl) {
+		console.log(data_tbl);
+		post({	'url': 'https://script.googleapis.com/v1/scripts/' + SCRIPT_ID + ':run',
+			'callback': executionAPIResponse,
+			'token': token,
+			'request': {'function': 'main',
+				'parameters': [data_tbl]
+			}
+		});
+	});
+}
+/**
+ * Handling response from the Execution API script.
+ * @param {Object} response - response object from API call
+ */
+function executionAPIResponse(response){
+	var info;
+	if (response.done){
+		info = 'Notes has entered tempo 5000';
+		//update(get_new_date());
+	} else {
+		info = 'Error...';
+	}
+	document.getElementById("info").textContent = info;
+	//exec_result.innerHTML = info;
+}
+
+/**
+ * Get users access_token.
+ *
+ * @param {object} options
+ *   @value {boolean} interactive - If user is not authorized ext, should auth UI be displayed.
+ *   @value {function} callback - Async function to receive getAuthToken result.
+ */
+function getAuthToken(options) {
+	chrome.identity.getAuthToken({ 'interactive': options.interactive }, options.callback);
+}
+/**
+ * Revoking the access token.
+ */
+function revokeToken() {
+	exec_result.innerHTML='';
+	getAuthToken({
+		'interactive': false,
+		'callback': revokeAuthTokenCallback,
+	});
+}
+
+/**
+ * Revoking the access token callback
+ */
+function revokeAuthTokenCallback(current_token) {
+	if (!chrome.runtime.lastError) {
+
+		// Remove the local cached token
+		chrome.identity.removeCachedAuthToken({ token: current_token }, function() {});
+
+		// Make a request to revoke token in the server
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'https://accounts.google.com/o/oauth2/revoke?token=' +
+			current_token);
+		xhr.send();
+
+		// Update the user interface accordingly
+		// changeState(STATE_START);
+		/*sampleSupport.log('Token revoked and removed from cache. '+
+			'Check chrome://identity-internals to confirm.');*/
+	}
+
+}
+
+/*chrome.storage.local.clear();
+update_display();*/
+update(get_new_date(), true);
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
 	document.getElementById('export_text').addEventListener('click', export_text);
+    document.getElementById('write_tempo').addEventListener('click', write_tempo);
 	document.getElementById("note_input").addEventListener("keypress",function() {
 		//when input 'enter'
 		if(event.keyCode == 13 && event.shiftKey){
 			update(get_new_date());
-			setTimeout(closeWin, 500);
+			//setTimeout(closeWin, 500);
 		};
 	});
 	document.getElementById("timer").addEventListener("keypress",function() {
