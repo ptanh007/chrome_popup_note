@@ -205,15 +205,13 @@ function sendDataToExecutionAPI() {
  * @param {string} token - Google access_token to authenticate request with.
  */
 function sendDataToExecutionAPICallback(token) {
-	get_storage().then(function(data_tbl) {
-		console.log(data_tbl);
-		post({	'url': 'https://script.googleapis.com/v1/scripts/' + SCRIPT_ID + ':run',
-			'callback': executionAPIResponse,
-			'token': token,
-			'request': {'function': 'main',
-				'parameters': [data_tbl]
-			}
-		});
+	var new_note = get_new_date();
+	post({	'url': 'https://script.googleapis.com/v1/scripts/' + SCRIPT_ID + ':run',
+		'callback': executionAPIResponse,
+		'token': token,
+		'request': {'function': 'main',
+			'parameters': new_note
+		}
 	});
 }
 /**
@@ -224,6 +222,7 @@ function executionAPIResponse(response){
 	var info;
 	if (response.done){
 		info = 'Notes has entered tempo 5000';
+		setTimeout(closeWin, 500);
 		//update(get_new_date());
 	} else {
 		info = 'Error...';
@@ -276,19 +275,18 @@ function revokeAuthTokenCallback(current_token) {
 
 }
 
-/*chrome.storage.local.clear();
-update_display();*/
-update(get_new_date(), true);
+chrome.storage.local.clear();
+update_display();
+//update(get_new_date(), true);
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
 	document.getElementById('export_text').addEventListener('click', export_text);
-    document.getElementById('write_tempo').addEventListener('click', write_tempo);
 	document.getElementById("note_input").addEventListener("keypress",function() {
 		//when input 'enter'
 		if(event.keyCode == 13 && event.shiftKey){
 			update(get_new_date());
-			//setTimeout(closeWin, 500);
+			write_tempo();
 		};
 	});
 	document.getElementById("timer").addEventListener("keypress",function() {
