@@ -287,9 +287,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_text').addEventListener('click', export_text);
 	document.getElementById("note_input").addEventListener("keypress",function() {
 		//when input 'enter'
-		if(event.keyCode == 13 && event.shiftKey){
-			update(get_new_date());
-			write_tempo();
+		if(event.keyCode == 13){
+			if (event.shiftKey){
+				//newline
+				document.getElementById("note_input").innerText += '\n';
+			} else {
+				//push note
+				event.preventDefault();
+				update(get_new_date());
+				write_tempo();
+			}
 		};
 	});
 	document.getElementById("timer").addEventListener("keypress",function() {
