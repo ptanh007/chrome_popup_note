@@ -1,6 +1,9 @@
 var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Apps Script script id
 
 function update_display(history_data){
+	if(!history_data){
+		return;
+	}
 	var history_text = '';
 	for (var i = 0; i<history_data.length; i++) {
 		var display_text = ''
@@ -275,9 +278,9 @@ function revokeAuthTokenCallback(current_token) {
 
 }
 
-chrome.storage.local.clear();
-update_display();
-//update(get_new_date(), true);
+//chrome.storage.local.clear();
+//update_display();
+update(get_new_date(), true);
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
