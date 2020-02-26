@@ -7,7 +7,7 @@ function update_display(history_data){
 		return;
 	}
 	var history_text = '';
-	for (var i =history_data.length;i>=0; i--) {
+	for (var i=history_data.length-1;i>=0; i--) {
 		history_text = history_text.concat(create_text(history_data[i]));
 	}
 	// get previous notes
@@ -279,7 +279,7 @@ function revokeAuthTokenCallback(current_token) {
 
 }
 
-update_display([]);
+update([], true);
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
