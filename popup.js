@@ -1,16 +1,15 @@
 var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Apps Script script id
+/*
 
+ */
 function update_display(history_data){
 	if(!history_data){
 		return;
 	}
 	var history_text = '';
-	for (var i = 0; i<history_data.length; i++) {
-		var display_text = ''
-		if(i>=0){
-			history_text = history_text.concat(create_text(history_data[i]));
-		};
-	};	
+	for (var i =history_data.length;i>=0; i--) {
+		history_text = history_text.concat(create_text(history_data[i]));
+	}
 	// get previous notes
 	document.getElementById("history_note").value = history_text;
 	// update time display
@@ -21,8 +20,8 @@ function update_display(history_data){
 	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
 	document.getElementById("note_input").value = "";
+}
 
-};
 function create_text(data) {
 	var text_data = '';
 	var whiteSpace = '';
@@ -56,15 +55,16 @@ function get_storage() {
 		});
 	});
 };
+/* write new noteinput to storage */
 function update(data, display_only=false){
 	get_storage().then(function(value) {
 		if(!display_only) {
 			value.push(data);
-		};
+		}
 		update_display(value);		
 		chrome.storage.local.set({'history_data': value});
     });
-};
+}
 
 function get_new_date() {
 	//get new note value
@@ -78,8 +78,9 @@ function get_new_date() {
 	return new_date;
 };
 function closeWin() {
-  window.close();   // Closes the new window
-  return null;
+	document.getElementById("info").textContent = '';//TODO: empty info
+  	window.close();   // Closes the new window
+  	return null;
 };
 
 function export_csv() {
@@ -224,13 +225,13 @@ function sendDataToExecutionAPICallback(token) {
 function executionAPIResponse(response){
 	var info;
 	if (response.done){
-		info = 'Notes has entered tempo 5000';
+		document.getElementById("info").textContent = 'Notes has entered tempo 5000';
+		update(get_new_date());
 		setTimeout(closeWin, 500);
-		//update(get_new_date());
 	} else {
-		info = 'Error...';
+		document.getElementById("info").textContent = 'Error...';
 	}
-	document.getElementById("info").textContent = info;
+
 	//exec_result.innerHTML = info;
 }
 
@@ -278,9 +279,7 @@ function revokeAuthTokenCallback(current_token) {
 
 }
 
-//chrome.storage.local.clear();
-//update_display();
-update(get_new_date(), true);
+update_display([]);
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
@@ -294,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				//push note
 				event.preventDefault();
-				update(get_new_date());
 				write_tempo();
 			}
 		};
