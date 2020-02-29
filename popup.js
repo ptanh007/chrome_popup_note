@@ -26,13 +26,9 @@ function update_display(history_data){
 function create_text(data) {
 	var text_data = '';
 	var whiteSpace = '';
-	var level = get_obj_value(data, 'level') || 0;
 	var obj_time = get_obj_value(data, 'time') || 'NA';
 	var value = get_obj_value(data, 'value') || '';
 	//var outcome = get_obj_value(data, 'outcome') || '';
-	for(var j= 0; j < level; j++) {
-		whiteSpace = whiteSpace.concat('   ');
-	}
 	text_data = text_data.concat(obj_time,':');
 	text_data = text_data.concat(value, '\n');
 	text_data = whiteSpace + text_data.split('\n').join(whiteSpace + '\n') ;
@@ -70,14 +66,12 @@ function update(data, display_only=false){
 
 function get_new_date() {
 	//get new note value
-	var level_e = document.getElementById('level');
-	var level = parseInt(level_e.options[level_e.selectedIndex].value);
 	var input_note = document.getElementById("note_input").value;
 	var outcome = document.getElementById("outcome_input").value;
 	var time = document.getElementById("time_note").value;
 	var date = document.getElementById("date").value;
 	//storage note to local memory
-	var new_date = {'level':level,'value':input_note, 'outcome':outcome, 'time':time, 'date': date};
+	var new_date = {'value':input_note, 'outcome':outcome, 'time':time, 'date': date};
 	return new_date;
 }
 function closeWin() {
@@ -97,7 +91,6 @@ function export_csv() {
 			if(cur_date===data_tbl[0]['date']){
 				line = data_tbl.shift();
 				csv_data = csv_data.concat(line['time'],';');
-				csv_data = csv_data.concat(line['level'],';');
 				csv_data = csv_data.concat(line['value'],';', '\n');
 				if(data_tbl.length===0) {
 					create_file = true;
