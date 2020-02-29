@@ -278,16 +278,33 @@ update([], true);
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
 	document.getElementById('export_text').addEventListener('click', export_text);
-	document.getElementById("note_input").addEventListener("keypress",function() {
+	document.getElementById("note_input").addEventListener("keypress",function(event) {
 		//when input 'enter'
 		if(event.keyCode == 13){
 			if (event.shiftKey){
 				//newline
 				document.getElementById("note_input").innerText += '\n';
 			} else {
-				//push note
-				event.preventDefault();
-				write_tempo();
+				// if note is not empty
+				if(document.getElementById("note_input").innerText) {
+					event.preventDefault();
+					write_tempo();//push note
+				}
+			}
+		}
+	});
+	document.getElementById("outcome_input").addEventListener("keypress",function(event) {
+		//when input 'enter'
+		if(event.keyCode == 13){
+			if (event.shiftKey){
+				//newline
+				document.getElementById("outcome_input").innerText += '\n';
+			} else {
+				// if note is not empty
+				if(document.getElementById("note_input").innerText) {
+					event.preventDefault();
+					write_tempo();//push note
+				}
 			}
 		}
 	});
