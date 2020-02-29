@@ -20,6 +20,7 @@ function update_display(history_data){
 	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
 	document.getElementById("note_input").value = "";
+	document.getElementById("outcome_input").value = "";
 }
 
 function create_text(data) {
@@ -28,21 +29,22 @@ function create_text(data) {
 	var level = get_obj_value(data, 'level') || 0;
 	var obj_time = get_obj_value(data, 'time') || 'NA';
 	var value = get_obj_value(data, 'value') || '';
+	//var outcome = get_obj_value(data, 'outcome') || '';
 	for(var j= 0; j < level; j++) {
 		whiteSpace = whiteSpace.concat('   ');
-	};
+	}
 	text_data = text_data.concat(obj_time,':');
 	text_data = text_data.concat(value, '\n');
 	text_data = whiteSpace + text_data.split('\n').join(whiteSpace + '\n') ;
 	return text_data;
-};
+}
 function get_obj_value(obj, key){
 	if(typeof(obj)==='object' && key in obj){
 		return obj[key]
 	} else {
 		return false
-	};
-};
+	}
+}
 
 function get_storage() {
 	return new Promise(function(resolve, reject) {
@@ -51,10 +53,10 @@ function get_storage() {
 				resolve(result.history_data);
 			} else {
 				resolve([]);
-			};
+			}
 		});
 	});
-};
+}
 /* write new noteinput to storage */
 function update(data, display_only=false){
 	get_storage().then(function(value) {
@@ -71,17 +73,18 @@ function get_new_date() {
 	var level_e = document.getElementById('level');
 	var level = parseInt(level_e.options[level_e.selectedIndex].value);
 	var input_note = document.getElementById("note_input").value;
+	var outcome = document.getElementById("outcome_input").value;
 	var time = document.getElementById("time_note").value;
 	var date = document.getElementById("date").value;
 	//storage note to local memory
-	var new_date = {'level':level,'value':input_note, 'time':time, 'date': date};
+	var new_date = {'level':level,'value':input_note, 'outcome':outcome, 'time':time, 'date': date};
 	return new_date;
-};
+}
 function closeWin() {
 	document.getElementById("info").textContent = '';//TODO: empty info
   	window.close();   // Closes the new window
   	return null;
-};
+}
 
 function export_csv() {
 	get_storage().then(function(data_tbl) {
@@ -99,24 +102,24 @@ function export_csv() {
 				if(data_tbl.length===0) {
 					create_file = true;
 					file_name = cur_date.concat('.csv');
-				};
+				}
 			} else {
 				if (cur_date!==''){
 					create_file = true;
 					file_name = cur_date.concat('.csv');										
-				};
-				cur_date = data_tbl[0]['date'];;
-			};
+				}
+				cur_date = data_tbl[0]['date'];
+			}
 			
 			if (create_file){
 				//creative new log file
 				export_file(csv_data, file_name);
 				csv_data = 'data:text/csv,';
 				create_file = false;			
-			};
-		};
+			}
+		}
 	});
-};
+}
 
 function export_text() {
 	get_storage().then(function(data_tbl) {
@@ -132,24 +135,24 @@ function export_text() {
 				if(data_tbl.length===0) {
 					create_file = true;
 					file_name = cur_date.concat('.txt');
-				};
+				}
 			} else {
 				if (cur_date!==''){
 					create_file = true;
 					file_name = cur_date.concat('.txt');										
-				};
+				}
 				cur_date = data_tbl[0]['date'];
-			};
+			}
 			if (create_file){
 				alert(file_name);
 				//creative new log file
 				export_file(text_data, file_name);
 				text_data = 'data:text,';
 				create_file = false;			
-			};
-		};
+			}
+		}
 	});
-};
+}
 
 function export_file(data,file_name) {
 	var link = document.createElement("a");
@@ -159,12 +162,12 @@ function export_file(data,file_name) {
 	document.body.appendChild(link);
 	link.click();
 	document.body.removeChild(link);
-};
+}
 
 function write_tempo() {
     //console.log("Write tempo");
 	sendDataToExecutionAPI();
-};
+}
 
 /**
  * Make an authenticated HTTP POST request.
@@ -185,7 +188,7 @@ function post(options) {
 		} else if(xhr.readyState === 4 && xhr.status !== 200) {
 			//sampleSupport.log('post', xhr.readyState, xhr.status, xhr.responseText);
 		}
-	};
+	}
 	xhr.open('POST', options.url, true);
 	// Set standard Google APIs authentication header.
 	xhr.setRequestHeader('Authorization', 'Bearer ' + options.token);
@@ -223,7 +226,6 @@ function sendDataToExecutionAPICallback(token) {
  * @param {Object} response - response object from API call
  */
 function executionAPIResponse(response){
-	var info;
 	if (response.done){
 		document.getElementById("info").textContent = 'Notes has entered tempo 5000';
 		update(get_new_date());
@@ -231,7 +233,6 @@ function executionAPIResponse(response){
 	} else {
 		document.getElementById("info").textContent = 'Error...';
 	}
-
 	//exec_result.innerHTML = info;
 }
 
@@ -295,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				event.preventDefault();
 				write_tempo();
 			}
-		};
+		}
 	});
 	document.getElementById("timer").addEventListener("keypress",function() {
 		// Handle key press
@@ -305,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if( !regex.test(key) ) {
 		event.returnValue = false;
 		if(event.preventDefault) event.preventDefault();
-		};
+		}
 	});
 });
 
