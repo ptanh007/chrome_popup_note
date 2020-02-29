@@ -59,9 +59,21 @@ function update(data, display_only=false){
 		if(!display_only) {
 			value.push(data);
 		}
-		update_display(value);		
+		
+		//remove data < 2 days old
+		var yesterday = getYesterday();
+		value = value.filter(function(itemVal, index, arr){
+			return new Date(itemVal.date) >= yesterday;
+		});
+
+		update_display(value);
 		chrome.storage.local.set({'history_data': value});
     });
+}
+
+function getYesterday(){
+	var today = new Date();
+	return today.setDate(today.getDate()-1);
 }
 
 function get_new_date() {
