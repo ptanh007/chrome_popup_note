@@ -10,14 +10,14 @@
     <style>
       body {
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
+        font-size: 11px;
       }
       #status {
         /* avoid an excessively wide status text */
-        white-space: pre;
+        /*white-space: pre;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-width: 400px;
+        max-width: 400px;*/
       }
     </style>
 
@@ -33,19 +33,18 @@
   </head>
   
   <body>
-	<h1>History</h1>
+	<h3>History</h3>
 		<textarea id="history_note" rows="5" cols="30" disabled></textarea></br>
-	<h2>Note</h2>
-		<p>
-			Time: <output id="time_note"></output></br>
-			Timer Value(Mins): <input id="timer" size=2></input>
-			<textarea  id="note_input" name='inpute note' rows="3" cols="30"></textarea ><br/>
-			Outcomes (vd: view all messages):
-			<textarea  id="outcome_input" name='inputeoutcome note' rows="3" cols="30"></textarea >
-			<output hidden id="date"></output></br>
-			<button id="export_csv">export csv</button>
-			<button id="export_text">export text</button>
-		</p>
+	<h3>Note</h3>
+	Time: <output id="time_note"></output></br>
+	Timer Value(Mins): <input id="timer" size=2></input><br>
+	Activity:<br>
+	<textarea  id="note_input" name='inpute note' rows="3" cols="30"></textarea ><br/>
+	Outcomes (vd: view all messages):<br>
+	<textarea  id="outcome_input" name='inputeoutcome note' rows="3" cols="30"></textarea >
+	<output hidden id="date"></output><br/>
+	<button id="export_csv">export csv</button>
+	<button id="export_text">export text</button>
 		<p id="info"></p>
 	<script src="popup.js"></script>
   </body>

@@ -3,6 +3,14 @@
   "name": "Tempo",
   "description": "Create popup per 5min",
   "version": "1.0",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "chrome_url_overrides": {
+    //"newtab": "popup.html"
+  },
   "browser_action": {
 	"name": "Tempo"
   },

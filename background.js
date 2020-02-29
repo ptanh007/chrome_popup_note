@@ -3,8 +3,15 @@ var cur_timer = 5;
 var global_timeout;
 var run_status = true;
 
+chrome.browserAction.onClicked.addListener(function(tab) {
+	chrome.tabs.create({
+		'url': chrome.runtime.getURL("popup.html")
+	});
+	change_icon('run');
+});
+
 //open window function
-function openwindow() {
+/*function openwindow() {
 	var current_win = window.open("popup.html", "extension_popup", "width=300,height=450,status=no");	
 	current_win.onload = function() {
 		current_win.document.getElementById("timer").value = cur_timer;
@@ -31,7 +38,7 @@ function openwindow() {
 				}, 2000);
 		});
 	};
-};
+};*/
 //timer call windown every timer out
 
 
@@ -42,13 +49,13 @@ function change_icon(app_status) {
 
 function set_timer(timer){
 	var interval_timout;
-	interval_timout = setInterval(openwindow, timer* 60* 1000);
+	//interval_timout = setInterval(openwindow, timer* 60* 1000);
 	run_status = true;
 	change_icon('run');	
 	return interval_timout;
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
 	openwindow();
 	global_timeout = set_timer(cur_timer);
 	chrome.browserAction.onClicked.addListener(function () {
@@ -63,5 +70,5 @@ document.addEventListener('DOMContentLoaded', function () {
 			openwindow();
 		};
 	});
-});
+});*/
 

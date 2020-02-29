@@ -278,30 +278,32 @@ update([], true);
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('export_csv').addEventListener('click', export_csv);
 	document.getElementById('export_text').addEventListener('click', export_text);
-	document.getElementById("note_input").addEventListener("keypress",function(event) {
+	document.getElementById("note_input").addEventListener("keypress",function() {
+		//console.log("keyp");
 		//when input 'enter'
 		if(event.keyCode == 13){
 			if (event.shiftKey){
 				//newline
-				document.getElementById("note_input").innerText += '\n';
+				document.getElementById("note_input").value += '\n';
 			} else {
+				console.log("key");
 				// if note is not empty
-				if(document.getElementById("note_input").innerText) {
+				if(document.getElementById("note_input").value) {
 					event.preventDefault();
 					write_tempo();//push note
 				}
 			}
 		}
 	});
-	document.getElementById("outcome_input").addEventListener("keypress",function(event) {
+	document.getElementById("outcome_input").addEventListener("keypress",function() {
 		//when input 'enter'
 		if(event.keyCode == 13){
 			if (event.shiftKey){
 				//newline
-				document.getElementById("outcome_input").innerText += '\n';
+				document.getElementById("outcome_input").value += '\n';
 			} else {
 				// if note is not empty
-				if(document.getElementById("note_input").innerText) {
+				if(document.getElementById("note_input").value) {
 					event.preventDefault();
 					write_tempo();//push note
 				}
