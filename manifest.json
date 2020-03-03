@@ -8,9 +8,9 @@
     "48": "icon.png",
     "128": "icon.png"
   },
-  "chrome_url_overrides": {
+  //"chrome_url_overrides": {
     //"newtab": "popup.html"
-  },
+  //},
   "browser_action": {
 	"name": "Tempo"
   },
@@ -18,8 +18,9 @@
     "scripts": ["background.js"]
   },
   "permissions": [
-	"identity",
-	"storage",
+    "identity",
+    "notifications",
+    "storage",
     "tabs",
     "https://*.googleapis.com/*"
   ],
