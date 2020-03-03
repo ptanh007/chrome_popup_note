@@ -5,32 +5,18 @@ var run_status = true;
 
 //open window function
 function openwindow() {
-	var current_win = window.open("popup.html", "extension_popup", "width=300,height=450,status=no");	
-	current_win.onload = function() {
-		current_win.document.getElementById("timer").value = cur_timer;
-		var typingTimer;
-		current_win.document.getElementById("timer").addEventListener("keyup",function() {
-			// Handle key press
-			var key = event.keyCode;
-			key = String.fromCharCode(key);
-			var regex = /[0-9]/;
-			if( !regex.test(key) ) {
-			event.returnValue = false;
-			if(event.preventDefault) event.preventDefault();
-			};
-			clearTimeout(typingTimer);
-			typingTimer = setTimeout(
-				function() {
-					clearInterval(global_timeout);
-					var new_timer = parseInt(current_win.document.getElementById("timer").value);
-					if(new_timer>=0){
-						cur_timer = new_timer;
-					};
-					current_win.document.getElementById("timer").value = cur_timer;
-					global_timeout = set_timer(cur_timer);
-				}, 2000);
+	chrome.tabs.create({
+		url: chrome.extension.getURL('popup.html'),
+		active: false
+	}, function(tab) {
+		// After the tab has been created, open a window to inject the tab
+		chrome.windows.create({
+			tabId: tab.id,
+			type: 'popup',
+			focused: true
+			// incognito, top, left, ...
 		});
-	};
+	});
 };
 //timer call windown every timer out
 
