@@ -3,6 +3,11 @@
   "name": "Tempo",
   "description": "Create popup per 5min",
   "version": "1.0",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
   "browser_action": {
 	"name": "Tempo"
   },

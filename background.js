@@ -1,7 +1,7 @@
 //
 var cur_timer = 5;
 var global_timeout;
-var run_status = true;
+var run_status = false;
 
 //open window function
 function openwindow() {
@@ -22,7 +22,7 @@ function openwindow() {
 
 
 function change_icon(app_status) {
-	var icons_list = {'run':'icons/icon_run.png', 'stop':'icons/icon_stop.png'};
+	var icons_list = {'run':'icons/icon_run.png', 'stop':'icon.png'};
     chrome.browserAction.setIcon({path: icons_list[app_status]});
 }
 
@@ -34,20 +34,17 @@ function set_timer(timer){
 	return interval_timout;
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-	openwindow();
-	global_timeout = set_timer(cur_timer);
-	chrome.browserAction.onClicked.addListener(function () {
-		if(run_status){
-			clearInterval(global_timeout);
-			change_icon('stop');
-			run_status = false;
-		} else {
-			clearInterval(global_timeout);
-			global_timeout = set_timer(cur_timer);
-			change_icon('run');			
-			openwindow();
-		};
-	});
+chrome.browserAction.onClicked.addListener(function () {
+
+	if(run_status){
+		clearInterval(global_timeout);
+		change_icon('stop');
+		run_status = false;
+	} else {
+		clearInterval(global_timeout);
+		global_timeout = set_timer(cur_timer);
+		change_icon('run');
+		openwindow();
+	}
 });
 

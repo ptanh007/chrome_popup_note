@@ -3,6 +3,7 @@ var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Ap
 
  */
 function update_display(history_data){
+	console.log("update_display");
 	if(!history_data){
 		return;
 	}
@@ -275,18 +276,21 @@ function revokeAuthTokenCallback(current_token) {
 
 update([], true);
 
-document.addEventListener('DOMContentLoaded', function () {
-	document.getElementById('export_csv').addEventListener('click', export_csv);
-	document.getElementById('export_text').addEventListener('click', export_text);
+//document.addEventListener('DOMContentLoaded', function () {
+	//document.getElementById('export_csv').addEventListener('click', export_csv);
+	//document.getElementById('export_text').addEventListener('click', export_text);
 	document.getElementById("note_input").addEventListener("keypress",function(event) {
 		//when input 'enter'
+		//console.log("note_input");
 		if(event.keyCode == 13){
+			console.log("event.keyCode == 13");
 			if (event.shiftKey){
+				//console.log("event.keyCode == 13");
 				//newline
-				document.getElementById("note_input").innerText += '\n';
+				document.getElementById("note_input").value += '\n';
 			} else {
 				// if note is not empty
-				if(document.getElementById("note_input").innerText) {
+				if(document.getElementById("note_input").value) {
 					event.preventDefault();
 					write_tempo();//push note
 				}
@@ -298,10 +302,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		if(event.keyCode == 13){
 			if (event.shiftKey){
 				//newline
-				document.getElementById("outcome_input").innerText += '\n';
+				document.getElementById("outcome_input").value += '\n';
 			} else {
 				// if note is not empty
-				if(document.getElementById("note_input").innerText) {
+				if(document.getElementById("note_input").value) {
 					event.preventDefault();
 					write_tempo();//push note
 				}
@@ -318,7 +322,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		if(event.preventDefault) event.preventDefault();
 		}
 	});
+//});
+
+document.addEventListener('DOMContentLoaded', function () {
+	//console.log("DOMContentLoaded");
 });
-
-
 
