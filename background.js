@@ -22,7 +22,7 @@ function openwindow() {
 
 
 function change_icon(app_status) {
-	var icons_list = {'run':'icons/icon_run.png', 'stop':'icon.png'};
+	var icons_list = {'run':'icons/icon_run.png', 'stop':'icons/icon_stop.png'};
     chrome.browserAction.setIcon({path: icons_list[app_status]});
 }
 
