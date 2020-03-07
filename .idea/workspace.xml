@@ -3,9 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="ee317103-496c-4666-99e2-5357c5ff0a99" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/background.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/popup.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/popup.js" beforeDir="false" afterPath="$PROJECT_DIR$/popup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/easy_install-3.7.exe.manifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/easy_install.exe.manifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip.exe.manifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip3.7.exe.manifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip3.exe.manifest" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,6 +117,11 @@
       <workItem from="1582333184862" duration="1800000" />
       <workItem from="1582382824844" duration="2451000" />
       <workItem from="1582539866435" duration="2479000" />
+      <workItem from="1583251073425" duration="806000" />
+      <workItem from="1583336524557" duration="788000" />
+      <workItem from="1583380979573" duration="2861000" />
+      <workItem from="1583421055299" duration="921000" />
+      <workItem from="1583545891847" duration="536000" />
     </task>
     <servers />
   </component>
@@ -199,5 +209,9 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="501" y="252" key="com.intellij.ide.util.TipDialog/0.0.1600.860@0.0.1600.860" timestamp="1578300121346" />
+    <state x="382" y="225" width="676" height="472" key="find.popup" timestamp="1583549323012">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="382" y="225" width="676" height="472" key="find.popup/0.23.1440.877@0.23.1440.877" timestamp="1583549323012" />
   </component>
 </project>

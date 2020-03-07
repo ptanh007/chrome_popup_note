@@ -324,7 +324,16 @@ update([], true);
 	});
 //});
 
+chrome.identity.getProfileUserInfo(function (userInfo){
+	console.log(userInfo);
+	document.getElementById("email").innerText =  userInfo.email;
+});
+
 document.addEventListener('DOMContentLoaded', function () {
 	//console.log("DOMContentLoaded");
+
+	/*chrome.identity.getAccounts(function (accounts) {
+		//console.log(accounts);
+	});*/
 });
 

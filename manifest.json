@@ -15,7 +15,7 @@
     "scripts": ["background.js"]
   },
   "permissions": [
-	"identity",
+	"identity","identity.email",
 	"storage",
     "tabs",
     "https://*.googleapis.com/*"
