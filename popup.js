@@ -3,7 +3,7 @@ var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Ap
 
  */
 function update_display(history_data){
-	console.log("update_display");
+	//console.log("update_display");
 	if(!history_data){
 		return;
 	}
@@ -20,7 +20,7 @@ function update_display(history_data){
 	document.getElementById("date").value = new_date.toISOString().substr(0, 19).replace(/T.*/, ' ');
 	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
-	document.getElementById("note_input").value = "";
+	document.getElementById("note_input").value = history_data[history_data.length-1].value;
 	document.getElementById("outcome_input").value = "";
 }
 
@@ -159,7 +159,10 @@ function export_file(data,file_name) {
 }
 
 function write_tempo() {
-    //console.log("Write tempo");
+	chrome.windows.getCurrent(function(window){
+		//console.log(window);
+		chrome.windows.update(window.id, {state:'minimized'});
+	});
 	sendDataToExecutionAPI();
 }
 
@@ -325,7 +328,7 @@ update([], true);
 //});
 
 chrome.identity.getProfileUserInfo(function (userInfo){
-	console.log(userInfo);
+	//console.log(userInfo);
 	document.getElementById("email").innerText =  userInfo.email;
 });
 
