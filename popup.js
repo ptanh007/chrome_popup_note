@@ -211,14 +211,16 @@ function sendDataToExecutionAPI() {
 function sendDataToExecutionAPICallback(token) {
 	var new_note = get_new_date();
 	post({	'url': 'https://script.googleapis.com/v1/scripts/' + SCRIPT_ID + ':run',
-		'callback': executionAPIResponse,
+		'callback': null,
 		'token': token,
 		'request': {'function': 'main',
 			'parameters': new_note
 		}
 	});
+	closeWin();
 }
 /**
+ * Deprecated :
  * Handling response from the Execution API script.
  * @param {Object} response - response object from API call
  */

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/chromepopup.iml" filepath="$PROJECT_DIR$/.idea/chromepopup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chrome_popup_note.iml" filepath="$PROJECT_DIR$/chrome_popup_note.iml" />
     </modules>
   </component>
 </project>
