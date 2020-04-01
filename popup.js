@@ -3,7 +3,7 @@ var SCRIPT_ID='13_C_0Gu_zFhxX_w_ktHEqu77U2neAf-qHurtZU2XWh6pObvPeQagpJ0-'; // Ap
 
  */
 function update_display(history_data){
-	//console.log("update_display");
+	console.log("update_display");
 	if(!history_data){
 		return;
 	}
@@ -20,7 +20,7 @@ function update_display(history_data){
 	document.getElementById("date").value = new_date.toISOString().substr(0, 19).replace(/T.*/, ' ');
 	document.getElementById("time_note").value = hours.concat(":", minutes);
 	//reset input note
-	document.getElementById("note_input").value = history_data[history_data.length-1].value;
+	document.getElementById("note_input").value = "";
 	document.getElementById("outcome_input").value = "";
 }
 
@@ -163,6 +163,7 @@ function write_tempo() {
 		//console.log(window);
 		chrome.windows.update(window.id, {state:'minimized'});
 	});
+    	//console.log("Write tempo");
 	sendDataToExecutionAPI();
 }
 
@@ -211,16 +212,15 @@ function sendDataToExecutionAPI() {
 function sendDataToExecutionAPICallback(token) {
 	var new_note = get_new_date();
 	post({	'url': 'https://script.googleapis.com/v1/scripts/' + SCRIPT_ID + ':run',
-		'callback': null,
+		'callback': executionAPIResponse,
 		'token': token,
 		'request': {'function': 'main',
 			'parameters': new_note
 		}
 	});
-	closeWin();
+	//setTimeout(closeWin, 1000);
 }
 /**
- * Deprecated :
  * Handling response from the Execution API script.
  * @param {Object} response - response object from API call
  */
@@ -330,7 +330,7 @@ update([], true);
 //});
 
 chrome.identity.getProfileUserInfo(function (userInfo){
-	//console.log(userInfo);
+	console.log(userInfo);
 	document.getElementById("email").innerText =  userInfo.email;
 });
 
