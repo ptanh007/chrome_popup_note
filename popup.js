@@ -55,11 +55,16 @@ function get_storage() {
 	});
 }
 /* write new noteinput to storage */
-function update(data, display_only=false){
+function update(data, display_only){
 	get_storage().then(function(value) {
 		if(!display_only) {
 			value.push(data);
 		}
+
+		if(value){
+			value = value.slice(0,100);
+		}
+		
 		update_display(value);		
 		chrome.storage.local.set({'history_data': value});
     });
