@@ -14,7 +14,7 @@ function update_display(history_data){
 	// get previous notes
 	document.getElementById("history_note").value = history_text;
 	// update time display
-	var new_date = new Date();
+	var new_date = getVNTime();
 	var hours = new_date.getHours().toString();
 	var minutes = new_date.getMinutes().toString();
 	document.getElementById("date").value = new_date.toISOString().substr(0, 19).replace(/T.*/, ' ');
@@ -22,6 +22,13 @@ function update_display(history_data){
 	//reset input note
 	document.getElementById("note_input").value = "";
 	document.getElementById("outcome_input").value = "";
+}
+
+//var localOffset = now.getTimezoneOffset()*60000;//var vnOffset = 7*60*60000;
+function getVNTime(){
+	var now = new Date();
+	var vntime = now.getTime() + (7*60 + now.getTimezoneOffset())*60000;
+	return new Date(vntime);
 }
 
 function create_text(data) {
