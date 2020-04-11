@@ -171,11 +171,8 @@ function export_file(data,file_name) {
 }
 
 function write_tempo() {
-	chrome.windows.getCurrent(function(window){
-		//console.log(window);
-		chrome.windows.update(window.id, {state:'minimized'});
-	});
-    	//console.log("Write tempo");
+	minizeWindow();
+	//console.log("Write tempo");
 	sendDataToExecutionAPI();
 }
 
@@ -346,11 +343,18 @@ chrome.identity.getProfileUserInfo(function (userInfo){
 	document.getElementById("email").innerText =  userInfo.email;
 });
 
+function minizeWindow(){
+	chrome.windows.getCurrent(function(window){
+		//console.log(window);
+		chrome.windows.update(window.id, {state:'minimized'});
+	});
+}
 document.addEventListener('DOMContentLoaded', function () {
 	//console.log("DOMContentLoaded");
 
 	/*chrome.identity.getAccounts(function (accounts) {
 		//console.log(accounts);
 	});*/
+	setTimeout(minizeWindow, 35000 );
 });
 
